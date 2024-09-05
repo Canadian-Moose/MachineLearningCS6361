@@ -1,56 +1,160 @@
+#! /usr/bin/env python3
+# Natasha Rovelli
+# CS6361 Array - Exercise 1
+# Due: 9.4.24
+
 import numpy as np
 
+# 1
 def is_square(X):
-    return
+    # get the shape 
+    shape = X.shape
+    # return false if 1 dimension 
+    if len(shape) < 1: return False
+    # compare width to other dimensions
+    # return false if don't match 
+    w = shape[0]
+    for dim in shape:
+        if dim != w: return False
+    # everything matches
+    return True
 
+# 2
 def max_loop(X):
+    # initialize negative infinity 
     mx = -np.inf
+    # loop through outer array
+    for a in X:
+        # find max of each inner array
+        # replace if larger than mx
+        mx = max(np.max(a), mx)
     return mx
 
+# 3
 def argmax_loop(X):
+    # initialize index to 0 and max to first entry
     amx = 0
+    mx = X[0]
+    # iterate through length of array
+    for i in range(1, len(X)):
+        # if greater, update variables 
+        if X[i] > mx:
+            mx = X[i]
+            amx = i
     return amx
 
+# 4
 def sum_loop(X):
+    # initialize sum
     s = 0
+    # find the shape 
+    shape = X.shape
+    # multiply dimensions for num elements
+    dim = np.prod(shape)
+    # reshape to single dimension 
+    a = X.reshape(dim,)
+    # sum the array 
+    s = np.sum(a)
     return s
 
+# 5
 def diagonal(X):
-    return X[0]
+    # find the shape of X
+    shape = X.shape
+    # slice the diagnonal
+    d = X[[i for i in range(shape[0])],[i for i in range(shape[0])]]
+    return d
 
+# 6
 def count_digits(X):
     count = np.zeros(10,dtype=np.int16)
+    # find the shape 
+    shape = X.shape
+    # multiply dimensions for num elements
+    dim = np.prod(shape)
+    # reshape to single dimension 
+    a = X.reshape(dim,)
+    # remove negative numbers 
+    a = a[a >= 0]
+    # remove numbers over 9
+    a = a[a <= 9]
+    # count the digits
+    count = np.bincount(a)
     return count
 
+# 7
 def dot(x1,x2):
-    return 0
+    # Multiply the arrays 
+    mult = x1 * x2
+    # sum the result 
+    dot = np.sum(mult)
+    return dot
 
+# 8
 def euclidean_dist(x1,x2):
-    return 0
+    # Numpy euclidian distance 
+    dist = np.linalg.norm(x1 - x2)
+    return dist
 
+# 9
 def manhattan_dist(x1,x2):
-    return 0
+    # calculate absolute value of distances 
+    diff = np.abs(x1 - x2)
+    # sum the result 
+    dist = np.sum(diff)
+    return dist
 
+# 10
 def accuracy(p,y):
-    return 0
+    # compare for difference 
+    comp = p == y
+    # divide the correct by the total 
+    acc = len(comp[comp == True]) / len(comp)
+    return acc
 
+# 11
 def mse(p,y):
-    return 0
+    # Numpy Mean Squared Error 
+    mse = np.square(np.subtract(y, p)).mean()
+    return mse
 
+# 12
 def select_features(X,n):
-    sel = [1,0,2]
-    return X[:,sel]
+    # calculate variance 
+    var = np.var(X, axis=0)
+    # get the indexs of highest variance 
+    sel = np.argsort(var)[-n:]
+    return X[:, sel]
 
+# 13
 def select_instances(X,f,t):
-    sel = [0,2,4]
-    return X[sel]
+    # select instances of feature f that are > t
+    return X[X[:, f] > t]
 
+# 14
 def nearest_neighbor(X,x):
-    return 0
+    # initialize index and distance
+    nn, dist = 0, np.inf
+    # for each index compare distance 
+    for i in range(0, len(X)):
+        d = euclidean_dist(X[i], x)
+        # replace dist and index if closer 
+        if d < dist:
+            dist, nn = d, i
+    return nn
 
+# 15
 def nearest_neighbors(X1,X2):
-    d = [0 for i in range(X2.shape[0])]
+    # reshape X1 for broadcasting 
+    x = X1.reshape(X1.shape[0], 1, X1.shape[1])
+    # calculate the differences between rows
+    # stored in 3rd axis 
+    dist = np.linalg.norm(x - X2, axis=2)
+    # find the nearest neighbor for each row 
+    d = np.argmin(dist, axis=0)
     return np.array(d)
+
+#------------------------------------------------------------#
 
 if __name__ == "__main__":
 
